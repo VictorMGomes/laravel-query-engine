@@ -22,5 +22,5 @@ interface FieldResolver
     /**
      * Resolve and translate an item for output.
      */
-    public function translateItem(Model $item, string $locale): array;
+    public function translateItem(Model $item, string $locale): mixed;
 }
