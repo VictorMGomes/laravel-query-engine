@@ -30,10 +30,22 @@ class TestCase extends Orchestra
     {
         config()->set('database.default', 'testing');
 
-        $app['db']->connection()->getSchemaBuilder()->create('test_models', function ($table) {
+        $schema = $app['db']->connection()->getSchemaBuilder();
+
+        $schema->create('authors', function ($table) {
             $table->id();
             $table->string('name');
-            $table->integer('age');
+            $table->timestamps();
+        });
+
+        $schema->create('posts', function ($table) {
+            $table->id();
+            $table->foreignId('author_id');
+            $table->string('title');
+            $table->integer('views')->default(0);
+            $table->boolean('is_published')->default(false);
+            $table->timestamp('published_at')->nullable();
+            $table->json('tags')->nullable();
             $table->timestamps();
         });
     }
