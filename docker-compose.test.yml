@@ -1,11 +1,27 @@
+# Universal Laravel Package Tester (Zero-Dockerfile)
+# You can copy this file to any Laravel package repository.
+# Requires: Docker & Docker Compose
+# Usage: docker compose -f docker-compose.test.yml run --rm test
+
 services:
   test:
-    build:
-      context: .
-      dockerfile: Dockerfile.test
-    # Using the 'build' context allows Docker to cache the image.
-    # It will only "rebuild" if you change the Dockerfile.
+    image: php:8.3-cli-alpine
+    user: root
     volumes:
       - .:/app
+    working_dir: /app
     environment:
       - COMPOSER_ALLOW_SUPERUSER=1
+    command: >
+      sh -c "
+      apk add --no-cache bash git unzip libzip-dev libpng-dev icu-dev sqlite-dev linux-headers &&
+      docker-php-ext-install zip gd intl pdo_sqlite &&
+      if [ ! -f '/usr/bin/composer' ]; then
+        curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
+      fi &&
+      if [ ! -d 'vendor' ]; then
+        composer install --no-interaction --prefer-dist
+      fi &&
+      ./vendor/bin/pest &&
+      ./vendor/bin/phpstan analyse src --memory-limit=-1
+      "
