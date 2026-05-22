@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Post extends Model
 {
     protected $table = 'posts';
+
     protected $guarded = [];
 
     public function author(): BelongsTo

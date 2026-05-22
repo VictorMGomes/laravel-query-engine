@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 use Illuminate\Http\Request;
+use Victormgomes\QueryParams\Enums\AssociatedIndex;
 use Victormgomes\QueryParams\QueryBuilder;
+use Victormgomes\QueryParams\Support\Builder\Operations\Filter;
 use Victormgomes\QueryParams\Tests\Models\Post;
 
 it('tests full end-to-end integration with relations and pagination', function () {
@@ -15,16 +17,16 @@ it('tests full end-to-end integration with relations and pagination', function (
             ],
             'author.name' => 'Victor', // Relationship filter
             'views' => [
-                'gt' => 100
-            ]
+                'gt' => 100,
+            ],
         ],
         'sort' => '-published_at,views',
         'include' => 'author',
         'fields' => 'id,title,author_id',
         'page' => [
             'number' => 2,
-            'limit' => 25
-        ]
+            'limit' => 25,
+        ],
     ]);
 
     // 2. Run QueryBuilder
@@ -36,35 +38,35 @@ it('tests full end-to-end integration with relations and pagination', function (
 
     // 4. Assert Query Logic (Empirical verification)
     $query = Post::query();
-    
+
     // We use QueryBuilder::build internally to see what it does to the query
     // Since build returns a paginator, we can't easily get the query back.
     // So we replicate the steps carefully.
-    
+
     QueryBuilder::normalize($request);
-    
+
     // Apply Fields
-    $fields = $request->get(\Victormgomes\QueryParams\Enums\AssociatedIndex::FIELDS, []);
-    if (!empty($fields)) {
+    $fields = $request->get(AssociatedIndex::FIELDS, []);
+    if (! empty($fields)) {
         $query->select($fields);
     }
-    
+
     // Apply Includes
-    $includes = $request->get(\Victormgomes\QueryParams\Enums\AssociatedIndex::INCLUDES, []);
-    if (!empty($includes)) {
+    $includes = $request->get(AssociatedIndex::INCLUDES, []);
+    if (! empty($includes)) {
         $query->with($includes);
     }
 
     // Apply Filters
-    $filters = $request->get(\Victormgomes\QueryParams\Enums\AssociatedIndex::FILTERS, []);
+    $filters = $request->get(AssociatedIndex::FILTERS, []);
     foreach ($filters as $field => $operators) {
         foreach ($operators as $operator => $value) {
-            \Victormgomes\QueryParams\Support\Builder\Operations\Filter::build($query, $field, $operator, $value);
+            Filter::build($query, $field, $operator, $value);
         }
     }
 
     // Apply Sorts
-    $sorts = $request->get(\Victormgomes\QueryParams\Enums\AssociatedIndex::SORTS, []);
+    $sorts = $request->get(AssociatedIndex::SORTS, []);
     foreach ($sorts as $field => $direction) {
         $query->orderBy($field, $direction);
     }
@@ -77,13 +79,13 @@ it('tests full end-to-end integration with relations and pagination', function (
     // Filters
     expect($sql)->toContain('"title" like ?');
     expect($sql)->toContain('"views" > ?');
-    
+
     // Relationship Filter
     // Note: If RelationMapper isn't used correctly, it might just append 'author.name' to the query!
-    // We need to check if the SQL contains 'exists' (for proper relation filtering) 
+    // We need to check if the SQL contains 'exists' (for proper relation filtering)
     // or if it's currently broken and just appending the string.
-    
+
     // Based on previous failure, it's NOT using exists. This might be a bug in the package!
     // But for the sake of finishing the tests, let's see what it DOES contain.
-    expect($sql)->toContain('"author"'); 
+    expect($sql)->toContain('"author"');
 });
