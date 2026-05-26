@@ -2,6 +2,10 @@
 
 All notable changes to `query-params` will be documented in this file.
 
+## v1.0.0 - 2026-05-26
+
+**Full Changelog**: https://github.com/VictorMGomes/query-params/compare/v0.0.12...v1.0.0
+
 ## v0.0.12 - 2026-05-22
 
 **Full Changelog**: https://github.com/VictorMGomes/query-params/compare/v0.0.11...v0.0.12
