@@ -31,11 +31,11 @@ class RuleGenerator
         $rules = [];
         $allowedFields = array_keys($resources['filters']);
 
+        $rules['filters'] = ['sometimes', 'array'.(! empty($allowedFields) ? ':'.implode(',', $allowedFields) : '')];
+
         if (empty($allowedFields)) {
             return $rules;
         }
-
-        $rules['filters'] = ['sometimes', 'array:'.implode(',', $allowedFields)];
 
         $operatorRules = Types::getOperatorRules();
 
@@ -61,11 +61,11 @@ class RuleGenerator
         $rules = [];
         $allowedFields = array_keys($resources['sorts']);
 
+        $rules['sorts'] = ['sometimes', 'array'.(! empty($allowedFields) ? ':'.implode(',', $allowedFields) : '')];
+
         if (empty($allowedFields)) {
             return $rules;
         }
-
-        $rules['sorts'] = ['sometimes', 'array:'.implode(',', $allowedFields)];
 
         foreach ($resources['sorts'] as $field => $config) {
             $rules['sorts.'.$field] = [RuleType::SOMETIMES, Rule::in($config['operations'])];
@@ -79,11 +79,12 @@ class RuleGenerator
         $rules = [];
         $allowedFields = array_keys($resources['fields']);
 
+        $rules['fields'] = ['sometimes', 'array'];
+
         if (empty($allowedFields)) {
             return $rules;
         }
 
-        $rules['fields'] = ['sometimes', 'array'];
         $rules['fields.*'] = ['string', Rule::in($allowedFields)];
 
         return $rules;
@@ -94,11 +95,12 @@ class RuleGenerator
         $rules = [];
         $allowedIncludes = array_keys($resources['includes']);
 
+        $rules['includes'] = ['sometimes', 'array'];
+
         if (empty($allowedIncludes)) {
             return $rules;
         }
 
-        $rules['includes'] = ['sometimes', 'array'];
         $rules['includes.*'] = ['string', Rule::in($allowedIncludes)];
 
         return $rules;
