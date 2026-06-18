@@ -10,14 +10,20 @@ A powerful, schema-aware API filtering engine for Laravel. It handles complex qu
 
 ## Why Use It?
 
-Building robust API endpoints typically requires writing repetitive validation rules, parsing URL arrays, and mapping them manually to Eloquent queries. This package acts as a **Schema-Aware Translation Layer**. It inspects your database schema to automatically whitelist columns, generate strict validation rules, and securely cast URL values into native PHP types before they reach your database.
+When building modern APIs, developers often face a difficult choice: write dozens of custom endpoints for every specific search context (manually validating and mapping queries for each one), or abandon REST entirely for heavy data-graph abstractions like GraphQL. 
+
+This package gives you the power of dynamic querying while keeping your application native and RESTful. By empowering your standard Laravel `index` endpoints, you can:
+- **Avoid Endpoint Sprawl:** You no longer need to write custom search endpoints (e.g., `/users/active`, `/users/recent`). A single endpoint safely handles infinitely complex combinations of filters, sorts, and includes.
+- **Stay Strictly RESTful:** Keep your architecture native to Laravel without introducing the massive overhead, caching complexities, and learning curves associated with GraphQL.
+- **Zero-Boilerplate Security:** It acts as a **Schema-Aware Translation Layer**. It automatically inspects your Eloquent model schema to whitelist columns, generate strict validation rules, and securely cast URL values into native PHP types before they ever hit the database.
 
 ## Features
 
-- **Schema-Aware Validation:** Validation rules and type casting are automatically generated from your database schema.
-- **High Performance Caching:** Automatically caches generated rules to prevent database schema introspection overhead in production.
+- **Schema-Aware Validation:** Validation rules and type casting are automatically generated from your Eloquent model schema.
+- **High Performance Caching:** Automatically caches generated rules to prevent schema introspection overhead in production.
 - **Global Security Layer:** Granularly enable or disable specific URL features (like filtering, sorting, or includes) globally via the configuration file.
 - **AI Agent Ready:** Ships with a built-in Laravel Boost Skill to instantly teach AI coding assistants how to use the package in your project.
+- **API Documentation Ready:** Exposes methods to retrieve deduplicated filter schemas, making it incredibly easy to auto-generate OpenAPI/Swagger specs or dynamic frontend UIs.
 - **Database Agnostic:** Natively supports MySQL, PostgreSQL, SQLite, and SQL Server out of the box via standard Eloquent methods.
 - **Two Syntax Formats:** Support for both standard Laravel Arrays and raw JSON strings in the URL.
 - **Strict Visibility:** Fully respects `$visible` and `$hidden` arrays on your models to prevent data exposure.
@@ -93,6 +99,9 @@ All Eloquent models are automatically equipped with the following methods out of
 ```php
 // Full pipeline: returns a paginated result
 User::paginateQuery(?Request $request = null): LengthAwarePaginator
+
+// Full pipeline: returns a cursor-paginated result (for massive datasets)
+User::cursorPaginateQuery(?Request $request = null): CursorPaginator
 
 // Raw builder: chain additional constraints before pagination
 User::buildQuery(?Request $request = null): Eloquent\Builder

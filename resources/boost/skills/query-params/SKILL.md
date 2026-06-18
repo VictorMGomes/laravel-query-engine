@@ -38,6 +38,7 @@ public function index(IndexUserRequest $request): LengthAwarePaginator
 | Method | Returns | Use case |
 |---|---|---|
 | `Model::paginateQuery($r)` | `LengthAwarePaginator` | Full pipeline — filters, sorts, includes, pagination |
+| `Model::cursorPaginateQuery($r)` | `CursorPaginator` | Full pipeline — cursor pagination (massive datasets) |
 | `Model::buildQuery($r)` | `Eloquent\Builder` | Query before pagination — chain custom constraints |
 | `Model::getQueryRules()` | `array` | Validation rules for the model |
 | `Model::getFilterSchema()` | `array` | Deduplicated frontend schema |
@@ -89,8 +90,9 @@ class IndexUserRequest extends FormRequest
 
 ### Alternative entry points
 ```php
-QueryBuilder::buildQuery(User::class, $request);      // Eloquent\Builder
-QueryBuilder::paginateQuery(User::class, $request);   // LengthAwarePaginator
+QueryBuilder::buildQuery(User::class, $request);         // Eloquent\Builder
+QueryBuilder::paginateQuery(User::class, $request);      // LengthAwarePaginator
+QueryBuilder::cursorPaginateQuery(User::class, $request); // CursorPaginator
 
 // Via facade
 QueryParams::paginateQuery(User::class, $request);
