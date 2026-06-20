@@ -80,11 +80,11 @@
         "enabled": true,
         "actions": [
             {
-                "action": "composer run insights",
+                "action": "docker compose run --rm dev composer run insights -- --no-interaction",
                 "options": []
             },
             {
-                "action": "composer run test",
+                "action": "docker compose run --rm dev composer run test",
                 "options": []
             }
         ]
