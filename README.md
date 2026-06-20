@@ -27,6 +27,9 @@ This package gives you the power of dynamic querying while keeping your applicat
 - **Database Agnostic:** Natively supports MySQL, PostgreSQL, SQLite, and SQL Server out of the box via standard Eloquent methods.
 - **Two Syntax Formats:** Support for both standard Laravel Arrays and raw JSON strings in the URL.
 - **Strict Visibility:** Fully respects `$visible` and `$hidden` arrays on your models to prevent data exposure.
+- **Local Scopes & Aggregations:** Securely expose eloquent scopes and aggregate functions (`_count`, `_sum`) via the URL using the strict `#[QueryOptions]` attribute.
+- **Virtual Fields (Accessors):** Automatically discovers and allows selecting Accessors and `$appends` just like real columns.
+- **Advanced Modifiers:** Built-in Universal Full-Text Search (`fts`) and Date component matching (`year`, `month`, `day`).
 - **IDE Autocompletion:** Plug-and-play autocomplete for all macros out of the box.
 
 ---

@@ -45,93 +45,24 @@ public function index(IndexUserRequest $request): LengthAwarePaginator
 
 *(Omitting `$request` uses the current request natively. IDE Autocompletion works out of the box).*
 
-## URL Syntax Reference
+## URL Syntax Examples
 
-The package natively decodes two URL formats. Use whichever fits the client application best.
+The package supports two URL formats.
 
-### 1. JSON Syntax
-```
-?filters={"name":{"like":"John"},"status":"active"}
-?sorts={"created_at":"desc"}
-?fields=["id","name","email"]
-?includes={"posts":{"fields":["id","title"]}}
-?page={"number":2,"limit":50}
-```
+**1. JSON Syntax:**
+`?filters={"name":{"like":"John"},"status":"active"}`
+`?sorts={"created_at":"desc"}`
+`?includes={"posts":{"fields":["id","title"]}}`
 
-### 2. Structured Array Syntax
-```
-?filters[name][like]=John
-?sorts[created_at]=desc
-?fields[]=id&fields[]=name
-?includes[posts][fields]=id,title
-?page[number]=2&page[limit]=50
-```
+**2. Array Syntax:**
+`?filters[name][like]=John`
+`?sorts[created_at]=desc`
+`?includes[posts][fields]=id,title`
 
-### Filter Operators Map
-- **Universal DB Support:** `eq`, `ne`, `gt`, `gte`, `lt`, `lte`, `in`, `nin`, `null`, `notnull`, `between`, `nbetween`, `like`, `notlike`, `ilike` (graceful fallback), `notilike` (graceful fallback), `contains`, `exists`, `notexists`, `or`, `and`, `not`.
-- **PostgreSQL Exclusive:** `containedby`, `overlap`, `fts`. (Securely aborts on non-pgsql).
+## Advanced Usage & Documentation
 
-## Advanced Usage
+If you need to implement complex features (such as Local Scopes, Accessors, Aggregations via `#[QueryOptions]`, specific Date/FTS operators, or rule interception), please consult the official package documentation and source code to ensure accurate implementation.
 
-### Intercepting and Modifying Rules
-When a FormRequest needs custom validation alongside the generated rules:
-```php
-#[MapQueryParams(User::class)]
-class IndexUserRequest extends FormRequest
-{
-    public function rules(): array
-    {
-        return array_merge($this->queryParamRules(), [
-            'custom_field' => 'required|string',
-        ]);
-    }
-}
-```
-
-### Alternative entry points
-```php
-QueryBuilder::buildQuery(User::class, $request);         // Eloquent\Builder
-QueryBuilder::paginateQuery(User::class, $request);      // LengthAwarePaginator
-QueryBuilder::cursorPaginateQuery(User::class, $request); // CursorPaginator
-
-// Via facade
-QueryParams::paginateQuery(User::class, $request);
-QueryBuilder::paginateQuery(User::class, $request);
-```
-
-### Global Registry (no attribute)
-Use when you cannot modify the FormRequest class:
-```php
-ModelRegistry::register(IndexUserRequest::class, User::class);
-```
-
-### Frontend schema
-```php
-Resource::getFilterSchema(User::class);   // deduplicated, recommended
-Resource::getQueryGuide(User::class);     // with syntax hints
-```
-
-
-
-### Console commands
-Cache validation rules in production to prevent schema introspection overhead.
-```bash
-php artisan query-params:cache                 # pre-cache all model rules
-php artisan query-params:clear App\Models\User  # clear specific cache
-```
-
-### Type Casting Map
-| DB Column | PHP Type |
-|---|---|
-| `integer`, `bigint`, `smallint` | `(int)` |
-| `float`, `decimal`, `numeric` | `(float)` |
-| `boolean` | `filter_var($val, FILTER_VALIDATE_BOOLEAN)` |
-| `date`, `datetime`, `timestamp` | `Carbon::parse()` |
-
-## Key Architectural Principles
-- **Schema-Aware Security:** Unknown URL parameters and unauthorized columns throw `ValidationException`.
-- **Global Security Layer:** Granularly enable or disable features (like filtering or sorting) globally.
-- **Visibility Enforced:** `$visible` / `$hidden` properties on models are strictly respected.
-- **High Performance:** Built-in caching prevents schema introspection overhead in production environments.
-- **Strategy Pattern Routing:** Operations are cleanly delegated to focused Handler classes for maximum performance and isolation.
-- **Database Agnosticism:** Operations translate to universal Eloquent methods, preserving full cross-database compatibility without raw SQL crashes.
+You can view the full documentation and code in the vendor directory:
+- **Docs:** `vendor/victormgomes/query-params/docs/`
+- **Source code:** `vendor/victormgomes/query-params/src/`

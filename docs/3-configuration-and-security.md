@@ -40,7 +40,7 @@ Extend the package to handle custom database behaviors by defining a Resolver.
 ```php
 // config/query-params.php
 'drivers' => [
-    'translatable' => \App\Support\QueryDrivers\TranslationDriver::class,
+    'default' => \App\Support\QueryDrivers\CustomDriver::class,
 ],
 ```
 
