@@ -1,0 +1,44 @@
+name: Code Quality & Static Analysis
+
+on:
+  push:
+    paths:
+      - 'src/**.php'
+      - 'tests/**.php'
+      - 'phpstan.neon.dist'
+      - 'phpinsights.php'
+      - 'composer.json'
+      - 'composer.lock'
+      - '.github/workflows/code-quality.yml'
+
+jobs:
+  quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          coverage: none
+
+      - name: Install composer dependencies
+        uses: ramsey/composer-install@v4
+
+      - name: Composer Validate
+        run: composer validate --strict
+
+      - name: Composer Audit
+        run: composer audit --abandoned=ignore
+
+      - name: Require Checker
+        run: vendor/bin/composer-require-checker check
+
+      - name: PHP Insights
+        run: vendor/bin/phpinsights analyse src --no-interaction
+
+      - name: Run PHPStan
+        run: ./vendor/bin/phpstan --error-format=github --memory-limit=-1

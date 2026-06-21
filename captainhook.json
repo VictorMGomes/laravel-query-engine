@@ -19,6 +19,10 @@
                 "options": []
             },
             {
+                "action": "composer audit --abandoned=ignore",
+                "options": []
+            },
+            {
                 "action": "composer run format:test -- {$STAGED_FILES|of-type:php}",
                 "conditions": [
                     {
@@ -80,12 +84,44 @@
         "enabled": true,
         "actions": [
             {
+                "action": "docker compose run --rm dev composer run check-requires",
+                "options": [],
+                "conditions": [
+                    {
+                        "exec": "\\CaptainHook\\App\\Hook\\Condition\\FileChanged\\OfType",
+                        "args": [["php", "json", "lock"]]
+                    }
+                ]
+            },
+            {
+                "action": "docker compose run --rm dev composer run analyse",
+                "options": [],
+                "conditions": [
+                    {
+                        "exec": "\\CaptainHook\\App\\Hook\\Condition\\FileChanged\\OfType",
+                        "args": [["php", "json", "lock"]]
+                    }
+                ]
+            },
+            {
                 "action": "docker compose run --rm dev composer run insights -- --no-interaction",
-                "options": []
+                "options": [],
+                "conditions": [
+                    {
+                        "exec": "\\CaptainHook\\App\\Hook\\Condition\\FileChanged\\OfType",
+                        "args": [["php", "json", "lock"]]
+                    }
+                ]
             },
             {
                 "action": "docker compose run --rm dev composer run test",
-                "options": []
+                "options": [],
+                "conditions": [
+                    {
+                        "exec": "\\CaptainHook\\App\\Hook\\Condition\\FileChanged\\OfType",
+                        "args": [["php", "json", "lock"]]
+                    }
+                ]
             }
         ]
     }
