@@ -29,7 +29,11 @@ All commit messages **must be in English** and follow the Conventional Commits s
 ## 3. Architecture & Design Principles
 * **Database Agnosticism:** Never write raw SQL unless it is absolutely necessary and isolated to a specific database driver (e.g., `PostgresHandler`). Always prefer native Eloquent Builder methods to guarantee compatibility across MySQL, PostgreSQL, SQLite, and SQL Server.
 * **Security & Visibility:** The package is designed to be secure by default. Always respect the model's `$visible` and `$hidden` attributes. Unrecognized parameters must fail validation, not fail silently or execute blindly.
-* **Strategy Pattern:** Keep the codebase modular. Filter operations and drivers are cleanly delegated to focused Handler classes. Do not bloat the main `QueryBuilder` class.
+* **Delegation & Strategy Pattern:** Keep the codebase modular and avoid God Classes. 
+  - `QueryNormalizer` must delegate all specific logic to focused `Normalizer` classes (e.g., `FiltersNormalizer`).
+  - `Resource` must delegate metadata gathering to specialized `Generator` classes (e.g., `FilterGenerator`).
+  - Generators should use the **Instantiable Generator Pattern**, avoiding static monolithic methods.
+  - Filter operations and database drivers must be cleanly delegated to focused Handler classes (e.g. `StringHandler`).
 * **Performance:** Avoid runtime schema introspection overhead when possible. The package relies on caching mechanisms for schema validation rules.
 
 ## 4. Testing & Development Workflow

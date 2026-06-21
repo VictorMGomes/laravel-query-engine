@@ -111,3 +111,17 @@ Aggregations can cause performance issues if exposed globally. Therefore, you mu
 // URL: ?fields[]=id&fields[]=name&fields[]=posts_count&fields[]=orders_sum_total
 ```
 
+### 4. Overriding Global Operators
+Sometimes you want to globally allow a certain operator in `config/query-params.php` (like `like` or `fts`), but restrict it on a specific model for performance reasons. You can use `disableOperators` or `allowedOperators`.
+
+```php
+#[QueryOptions(
+    // Disable expensive operators just for this model
+    disableOperators: ['fts', 'like'],
+)]
+class LogEntry extends Model
+{
+    // ...
+}
+```
+
