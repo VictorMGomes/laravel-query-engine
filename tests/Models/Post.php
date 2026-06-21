@@ -19,6 +19,10 @@ class Post extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'is_published' => 'boolean',
+    ];
+
     public function author(): BelongsTo
     {
         return $this->belongsTo(Author::class);
