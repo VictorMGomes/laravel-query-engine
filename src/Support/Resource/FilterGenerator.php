@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use ReflectionClass;
+use Victormgomes\QueryParams\Enums\AbstractType;
 use Victormgomes\QueryParams\Enums\Operators;
 use Victormgomes\QueryParams\Support\Types;
 
@@ -87,14 +88,7 @@ final class FilterGenerator
             }
 
             $columnType = Types::resolveType($attribute['type'] ?? 'string');
-            $allowedOps = [];
-
-            foreach ($this->allowedOperators as $operator) {
-                $allowedTypes = $this->operatorTypes[$operator] ?? [];
-                if (in_array($columnType, $allowedTypes, true)) {
-                    $allowedOps[] = $operator;
-                }
-            }
+            $allowedOps = $this->getOperationsForType($columnType);
 
             if (! empty($allowedOps)) {
                 $this->filters[$name] = [
@@ -105,86 +99,106 @@ final class FilterGenerator
         }
     }
 
+    private function getOperationsForType(AbstractType $columnType): array
+    {
+        return array_values(array_filter(
+            $this->allowedOperators,
+            fn (string $op): bool => in_array($columnType, $this->operatorTypes[$op] ?? [], true)
+        ));
+    }
+
     private function appendRelationFilters(): void
     {
+        $relationOps = array_intersect(
+            [Operators::EQ->value, Operators::NE->value, Operators::IN->value, Operators::NIN->value],
+            $this->allowedOperators
+        );
+
+        if (empty($relationOps)) {
+            return;
+        }
+
         foreach ($this->relationMap as $name => $data) {
-            if (! $this->isFilterAllowed($name)) {
+            if (! $this->isFilterAllowed($name) || ! isset($data['foreign_key']) || isset($this->filters[$name])) {
                 continue;
             }
 
-            if (isset($data['foreign_key']) && ! isset($this->filters[$name])) {
-                $relationOps = array_intersect(
-                    [Operators::EQ->value, Operators::NE->value, Operators::IN->value, Operators::NIN->value],
-                    $this->allowedOperators
-                );
-
-                if (! empty($relationOps)) {
-                    $this->filters[$name] = [
-                        'type' => 'relation_id',
-                        'operations' => array_values($relationOps),
-                        'is_alias' => $data['is_alias'] ?? false,
-                        'maps_to' => $data['foreign_key'],
-                    ];
-                }
-            }
+            $this->filters[$name] = [
+                'type' => 'relation_id',
+                'operations' => array_values($relationOps),
+                'is_alias' => $data['is_alias'] ?? false,
+                'maps_to' => $data['foreign_key'],
+            ];
         }
     }
 
     private function appendExistenceFilters(): void
     {
+        $relationOps = array_intersect([Operators::EXISTS->value, Operators::NOTEXISTS->value], $this->allowedOperators);
+
+        if (empty($relationOps)) {
+            return;
+        }
+
+        $ops = array_values($relationOps);
+
         foreach ($this->relationMap as $name => $data) {
             if (! $this->isFilterAllowed($name)) {
                 continue;
             }
 
-            $relationOps = array_intersect([Operators::EXISTS->value, Operators::NOTEXISTS->value], $this->allowedOperators);
-            if (! empty($relationOps)) {
-                if (isset($this->filters[$name])) {
-                    $this->filters[$name]['operations'] = array_values(array_unique(array_merge(
-                        $this->filters[$name]['operations'],
-                        $relationOps
-                    )));
-                } else {
-                    $this->filters[$name] = [
-                        'type' => 'relation',
-                        'operations' => array_values($relationOps),
-                        'is_alias' => $data['is_alias'] ?? false,
-                        'maps_to' => $data['real_name'],
-                    ];
-                }
+            if (isset($this->filters[$name])) {
+                $this->filters[$name]['operations'] = array_values(array_unique(array_merge(
+                    $this->filters[$name]['operations'],
+                    $ops
+                )));
+
+                continue;
             }
+
+            $this->filters[$name] = [
+                'type' => 'relation',
+                'operations' => $ops,
+                'is_alias' => $data['is_alias'] ?? false,
+                'maps_to' => $data['real_name'],
+            ];
         }
     }
 
     private function appendSoftDeletesFilters(): void
     {
-        if ($this->modelFQCN && in_array(SoftDeletes::class, class_uses_recursive($this->modelFQCN), true)) {
-            $booleanOps = array_intersect([Operators::EQ->value], $this->allowedOperators);
-            if (! empty($booleanOps)) {
-                $ops = array_values($booleanOps);
-                $this->filters['with_deleted'] = ['type' => 'boolean', 'operations' => $ops];
-                $this->filters['only_deleted'] = ['type' => 'boolean', 'operations' => $ops];
-            }
+        if (! $this->modelFQCN || ! in_array(SoftDeletes::class, class_uses_recursive($this->modelFQCN), true)) {
+            return;
+        }
+
+        $booleanOps = array_intersect([Operators::EQ->value], $this->allowedOperators);
+        if (! empty($booleanOps)) {
+            $ops = array_values($booleanOps);
+            $this->filters['with_deleted'] = ['type' => 'boolean', 'operations' => $ops];
+            $this->filters['only_deleted'] = ['type' => 'boolean', 'operations' => $ops];
         }
     }
 
     private function appendScopeFilters(): void
     {
-        if (! empty($this->allowedScopes) && $this->modelFQCN) {
-            $reflection = new ReflectionClass($this->modelFQCN);
-            foreach ($this->allowedScopes as $scope) {
-                $methodName = 'scope'.ucfirst($scope);
-                if ($reflection->hasMethod($methodName)) {
-                    $method = $reflection->getMethod($methodName);
-                    $hasParams = $method->getNumberOfParameters() > 1;
+        if (empty($this->allowedScopes) || ! $this->modelFQCN) {
+            return;
+        }
 
-                    $this->filters[$scope] = [
-                        'type' => $hasParams ? 'string' : 'boolean',
-                        'operations' => [Operators::EQ->value],
-                        'is_scope' => true,
-                    ];
-                }
+        $reflection = new ReflectionClass($this->modelFQCN);
+        foreach ($this->allowedScopes as $scope) {
+            $methodName = 'scope'.ucfirst($scope);
+            if (! $reflection->hasMethod($methodName)) {
+                continue;
             }
+
+            $hasParams = $reflection->getMethod($methodName)->getNumberOfParameters() > 1;
+
+            $this->filters[$scope] = [
+                'type' => $hasParams ? 'string' : 'boolean',
+                'operations' => [Operators::EQ->value],
+                'is_scope' => true,
+            ];
         }
     }
 }
