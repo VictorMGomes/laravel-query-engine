@@ -15,14 +15,12 @@ final class SortGenerator
         private readonly array $relationMap,
         private readonly ?array $allowedSorts,
         private readonly array $disabledSorts
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array|Collection $attributes
-     * @param array<string, mixed> $relationMap
-     * @param array<int, string>|null $allowedSorts
-     * @param array<int, string> $disabledSorts
+     * @param  array<string, mixed>  $relationMap
+     * @param  array<int, string>|null  $allowedSorts
+     * @param  array<int, string>  $disabledSorts
      * @return array<string, mixed>
      */
     public static function generate(
@@ -52,21 +50,15 @@ final class SortGenerator
         return $this->sorts;
     }
 
-    /**
-     * @param string $name
-     * @return bool
-     */
     private function isSortAllowed(string $name): bool
     {
         if ($this->allowedSorts !== null && ! in_array($name, $this->allowedSorts, true)) {
             return false;
         }
+
         return ! in_array($name, $this->disabledSorts, true);
     }
 
-    /**
-     * @return void
-     */
     private function generateStandardSorts(): void
     {
         foreach ($this->attributes as $attribute) {
@@ -79,9 +71,6 @@ final class SortGenerator
         }
     }
 
-    /**
-     * @return void
-     */
     private function appendRelationSorts(): void
     {
         foreach ($this->relationMap as $name => $data) {

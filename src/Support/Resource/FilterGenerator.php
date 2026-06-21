@@ -14,6 +14,7 @@ use Victormgomes\QueryParams\Support\Types;
 final class FilterGenerator
 {
     private array $filters = [];
+
     private array $operatorTypes;
 
     public function __construct(
@@ -73,6 +74,7 @@ final class FilterGenerator
         if ($this->allowedFilters !== null && ! in_array($name, $this->allowedFilters, true)) {
             return false;
         }
+
         return ! in_array($name, $this->disabledFilters, true);
     }
 

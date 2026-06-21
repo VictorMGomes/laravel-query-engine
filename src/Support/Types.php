@@ -8,7 +8,7 @@ use Victormgomes\QueryParams\Enums\AbstractType;
 use Victormgomes\QueryParams\Enums\AssociatedIndex;
 use Victormgomes\QueryParams\Maps\TypesMap;
 
-class Types
+final class Types
 {
     public static function getOperatorTypes(): array
     {

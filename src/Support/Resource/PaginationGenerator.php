@@ -6,7 +6,7 @@ namespace Victormgomes\QueryParams\Support\Resource;
 
 use Victormgomes\QueryParams\Enums\AssociatedIndex;
 
-class PaginationGenerator
+final class PaginationGenerator
 {
     public static function generate(): array
     {

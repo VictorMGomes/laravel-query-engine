@@ -43,6 +43,7 @@ class FieldGenerator
                 'is_accessor' => false,
             ];
         }
+
         return $fields;
     }
 
@@ -121,7 +122,7 @@ class FieldGenerator
             }
         }
 
-        $instance = new $modelFQCN();
+        $instance = new $modelFQCN;
         $appends = $instance->getAppends();
 
         return array_values(array_unique(array_merge($accessors, $appends)));

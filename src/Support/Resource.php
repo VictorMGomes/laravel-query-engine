@@ -4,18 +4,12 @@ declare(strict_types=1);
 
 namespace Victormgomes\QueryParams\Support;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\ModelInfo;
 use Illuminate\Database\Eloquent\ModelInspector;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use ReflectionClass;
-use ReflectionMethod;
-use ReflectionNamedType;
 use Victormgomes\QueryParams\Attributes\QueryOptions;
-use Victormgomes\QueryParams\Enums\AssociatedIndex;
 use Victormgomes\QueryParams\Support\Resource\FieldGenerator;
 use Victormgomes\QueryParams\Support\Resource\FilterGenerator;
 use Victormgomes\QueryParams\Support\Resource\IncludeGenerator;

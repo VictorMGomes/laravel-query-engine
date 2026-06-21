@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Victormgomes\QueryParams\Support\Resource;
 
-class IncludeGenerator
+final class IncludeGenerator
 {
     public static function generate(array $relationMap, ?array $allowedIncludes = null, array $disabledIncludes = []): array
     {
