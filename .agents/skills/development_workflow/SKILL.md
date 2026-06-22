@@ -47,6 +47,6 @@ docker compose run --rm dev composer run <script-name>
 - **Environment:** The Docker container maps the current directory `/app`, so it
   uses the host's `vendor` folder dynamically. Do not run `composer install`
   unless explicitly asked.
-- **Releases & Commits:** We use Release Please for automated semantic versioning. 
-  You **must** use Conventional Commits (e.g., `feat:`, `fix:`). 
+- **Releases & Commits:** We use Release Please for automated semantic versioning.
+  You **must** use Conventional Commits (e.g., `feat:`, `fix:`).
   To trigger a major version bump for breaking changes, you **must** append an exclamation mark `!` to the commit type (e.g., `refactor!:` or `feat!:`).

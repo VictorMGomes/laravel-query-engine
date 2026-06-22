@@ -55,12 +55,12 @@
         "illuminate/validation": "^12.0 || ^13.0",
         "illuminate/console": "^12.0 || ^13.0",
         "nesbot/carbon": "^3.0",
-        "symfony/finder": "^7.0",
+        "symfony/finder": "^7.0 || ^8.0",
         "ext-filter": "*"
     },
     "require-dev": {
-        "captainhook/captainhook": "*",
-        "captainhook/plugin-composer": "*",
+        "captainhook/captainhook": "^5.0",
+        "captainhook/plugin-composer": "^5.0",
         "infection/infection": "^0.33",
         "larastan/larastan": "^3.0",
         "laravel/pao": "^1.1",
