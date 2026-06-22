@@ -39,11 +39,13 @@ class Resource
         // Use configured metadata connection if none provided
         $connection ??= Config::get('query-params.metadata_connection');
 
-        /** @var ModelInfo $modelInfo */
+        /** @var ModelInfo|array $modelInfo */
         $modelInfo = $inspector->inspect($modelFQCN, $connection);
 
+        $modelAttributes = is_array($modelInfo) ? ($modelInfo['attributes'] ?? []) : $modelInfo->attributes;
+
         $attributes = [];
-        foreach ($modelInfo->attributes as $attribute) {
+        foreach ($modelAttributes as $attribute) {
             $name = $attribute['name'];
 
             // 1. If $visible is defined, only include fields in $visible
@@ -52,7 +54,8 @@ class Resource
             }
 
             // 2. Always respect $hidden
-            if (in_array($name, $hidden, true) || ($attribute['hidden'] ?? false) === true) {
+            $isHidden = $attribute['hidden'] ?? false;
+            if (in_array($name, $hidden, true) || $isHidden === true) {
                 continue;
             }
 
