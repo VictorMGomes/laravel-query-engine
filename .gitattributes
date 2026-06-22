@@ -15,6 +15,7 @@
 /Dockerfile                     export-ignore
 /docker-compose.yml             export-ignore
 /docker-compose.test.yml        export-ignore
+/.actrc                         export-ignore
 
 # Tests
 /tests                          export-ignore
@@ -32,7 +33,10 @@
 /composer-require-checker.json  export-ignore
 /.php_cs.dist.php               export-ignore
 /infection.json.dist            export-ignore
-/.prettierrc                    export-ignore
+/.prettierrc.json               export-ignore
+/.prettierignore                export-ignore
+/.markdownlint.json             export-ignore
+/.markdownlintignore            export-ignore
 /captainhook.json               export-ignore
 
 # Development-only directories

@@ -23,7 +23,7 @@
                 "options": []
             },
             {
-                "action": "composer run format:test -- {$STAGED_FILES|of-type:php}",
+                "action": "composer run check:php -- {$STAGED_FILES|of-type:php}",
                 "conditions": [
                     {
                         "exec": "\\CaptainHook\\App\\Hook\\Condition\\FileStaged\\OfType",
@@ -32,7 +32,7 @@
                 ]
             },
             {
-                "action": "composer run refactor:dry-run -- {$STAGED_FILES|of-type:php}",
+                "action": "composer run refactor:check -- {$STAGED_FILES|of-type:php}",
                 "conditions": [
                     {
                         "exec": "\\CaptainHook\\App\\Hook\\Condition\\FileStaged\\OfType",
@@ -41,38 +41,11 @@
                 ]
             },
             {
-                "action": "sudo act -j actionlint -W .github/workflows/lint-infra.yml",
+                "action": "composer run act:lint",
                 "conditions": [
                     {
                         "exec": "\\CaptainHook\\App\\Hook\\Condition\\FileStaged\\OfType",
-                        "args": ["yml"]
-                    }
-                ]
-            },
-            {
-                "action": "sudo act -j hadolint -W .github/workflows/lint-infra.yml",
-                "conditions": [
-                    {
-                        "exec": "\\CaptainHook\\App\\Hook\\Condition\\FileStaged\\ThatIs",
-                        "args": [["Dockerfile"]]
-                    }
-                ]
-            },
-            {
-                "action": "sudo act -j markdownlint -W .github/workflows/lint-infra.yml",
-                "conditions": [
-                    {
-                        "exec": "\\CaptainHook\\App\\Hook\\Condition\\FileStaged\\OfType",
-                        "args": ["md"]
-                    }
-                ]
-            },
-            {
-                "action": "sudo act -j jsonlint -W .github/workflows/lint-infra.yml",
-                "conditions": [
-                    {
-                        "exec": "\\CaptainHook\\App\\Hook\\Condition\\FileStaged\\OfType",
-                        "args": ["json"]
+                        "args": [["yml", "yaml", "md", "json"]]
                     }
                 ]
             }
@@ -82,7 +55,7 @@
         "enabled": true,
         "actions": [
             {
-                "action": "sudo act -j quality -W .github/workflows/code-quality.yml",
+                "action": "composer run act:quality",
                 "options": [],
                 "conditions": [
                     {
@@ -92,7 +65,7 @@
                 ]
             },
             {
-                "action": "sudo act -j test -W .github/workflows/run-tests.yml",
+                "action": "composer run act:tests",
                 "options": [],
                 "conditions": [
                     {

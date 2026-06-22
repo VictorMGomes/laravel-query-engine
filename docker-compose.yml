@@ -1,16 +1,15 @@
 services:
-  dev:
-    build:
-      context: .
-      args:
-        UID: ${UID:-1000}
-        GID: ${GID:-1000}
-        USERNAME: dev
-    working_dir: /app
-    volumes:
-      - .:/app
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      PAO_FORCE: true
-    command: tail -f /dev/null
-
+    dev:
+        build:
+            context: .
+            args:
+                UID: ${UID:-1000}
+                GID: ${GID:-1000}
+                USERNAME: dev
+        working_dir: /app
+        volumes:
+            - .:/app
+            - /var/run/docker.sock:/var/run/docker.sock
+        environment:
+            PAO_FORCE: true
+        command: tail -f /dev/null
