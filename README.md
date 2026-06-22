@@ -47,6 +47,7 @@ performance of standard Laravel REST APIs.
   models to securely expose Local Scopes and query aggregations.
 - **Exportable Schemas:** Easily export deduplicated filter schemas to generate
   dynamic frontend UIs or OpenAPI documentation.
+- **AI Agent Ready:** Includes an official [Laravel Boost](https://github.com/laravel/boost) skill to automatically teach AI agents (like Claude Code and Cursor) how to use this package in your project.
 
 ## How It Works
 

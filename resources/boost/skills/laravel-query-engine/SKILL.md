@@ -1,3 +1,8 @@
+---
+name: laravel-query-engine
+description: A schema-aware API filtering engine for Laravel that handles complex query parameters using native Laravel validation and Eloquent queries.
+---
+
 # laravel-query-engine Skill
 
 ## Overview
