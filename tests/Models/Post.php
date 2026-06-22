@@ -30,7 +30,7 @@ class Post extends Model
 
     public function scopePublished($query): void
     {
-        $query->where('is_published', true);
+        $query->where('is_published', 1);
     }
 
     public function scopePopular($query, int $minViews): void
