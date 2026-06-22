@@ -25,7 +25,7 @@ jobs:
         name: Markdown Lint
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
             - name: Setup Node
               uses: actions/setup-node@v4
               with:
@@ -37,7 +37,7 @@ jobs:
         name: JSON Lint
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
             - name: Setup Node
               uses: actions/setup-node@v4
               with:
@@ -49,7 +49,7 @@ jobs:
         name: Dockerfile Lint
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
             - name: Run Hadolint
               uses: hadolint/hadolint-action@v3.1.0
               with:
@@ -59,7 +59,7 @@ jobs:
         name: Actions Lint
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
             - name: Run Actionlint
               run: |
                   bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
