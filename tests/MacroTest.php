@@ -341,14 +341,14 @@ it('supports local scopes securely', function (): void {
     Post::create(['author_id' => $author->id, 'title' => 'Post 2', 'is_published' => true, 'views' => 10]);
     Post::create(['author_id' => $author->id, 'title' => 'Post 3', 'is_published' => true, 'views' => 50]);
 
-    // 1. Scope sem parametro
-    // Devido a bugs no driver PDO do SQLite ao converter booleanos sob diferentes
-    // versões do PHP (ex: Windows PHP 8.3) e dependências antigas do framework.
+    // 1. Scope without parameter
+    // Due to bugs in the SQLite PDO driver when converting booleans under different
+    // PHP versions (e.g. Windows PHP 8.3) and older framework dependencies.
     $request1 = new Request(['filters' => ['published' => true]]);
     $results1 = QueryBuilder::buildQuery(Post::class, $request1)->get();
     expect($results1)->toHaveCount(2);
 
-    // 2. Scope com parametro
+    // 2. Scope with parameter
     $request2 = new Request(['filters' => ['popular' => ['eq' => 50]]]);
     $results2 = QueryBuilder::buildQuery(Post::class, $request2)->get();
     expect($results2)->toHaveCount(1);
