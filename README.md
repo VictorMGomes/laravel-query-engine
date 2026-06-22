@@ -18,6 +18,8 @@ queries based on Eloquent Models.
 
 ## Why Use It?
 
+This package saves your time and tokens!
+
 Stop writing repetitive boilerplate for every index endpoint. `laravel-query-engine`
 acts as a seamless bridge between your HTTP requests and Eloquent.
 
