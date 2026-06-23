@@ -1,4 +1,8 @@
 {
+    "config": {
+        "run-mode": "docker",
+        "run-exec": "docker compose run --rm dev"
+    },
     "commit-msg": {
         "enabled": true,
         "actions": [
@@ -65,7 +69,7 @@
                 ]
             },
             {
-                "action": "composer run act:tests",
+                "action": "composer run act:tests:single",
                 "options": [],
                 "conditions": [
                     {

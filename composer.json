@@ -129,6 +129,7 @@
         "act:all": "sudo act 2>&1 | tee logs/act-all.txt ; composer run act:clean",
         "act:lint": "sudo act -W .github/workflows/lint-infra.yml 2>&1 | tee logs/act-lint.txt ; composer run act:clean",
         "act:tests": "sudo act -W .github/workflows/run-tests.yml 2>&1 | tee logs/act-tests.txt ; composer run act:clean",
+        "act:tests:single": "sudo act -W .github/workflows/run-tests.yml --matrix os:ubuntu-latest --matrix php:8.5 --matrix laravel:13.* --matrix stability:prefer-stable 2>&1 | tee logs/act-tests-single.txt ; composer run act:clean",
         "act:quality": "sudo act -W .github/workflows/code-quality.yml 2>&1 | tee logs/act-quality.txt ; composer run act:clean",
         "act:style": "sudo act -W .github/workflows/fix-php-code-style-issues.yml 2>&1 | tee logs/act-style.txt ; composer run act:clean"
     },
