@@ -2,6 +2,13 @@
 
 All notable changes to `laravel-query-engine` will be documented in this file.
 
+## [1.1.1](https://github.com/VictorMGomes/laravel-query-engine/compare/v1.1.0...v1.1.1) (2026-06-23)
+
+
+### Bug Fixes
+
+* **ci:** ignore CHANGELOG.md in markdown linters to prevent release-please conflicts ([150ec51](https://github.com/VictorMGomes/laravel-query-engine/commit/150ec518a3952f9665d0be2a14b99c37eff4fb8b))
+
 ## [1.1.0](https://github.com/VictorMGomes/laravel-query-engine/compare/v1.0.0...v1.1.0) (2026-06-23)
 
 
