@@ -17,4 +17,3 @@ jobs:
               uses: googleapis/release-please-action@v4
               with:
                   release-type: php
-                  changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"perf","section":"Performance Improvements","hidden":false},{"type":"refactor","section":"Code Refactoring","hidden":false}]'
