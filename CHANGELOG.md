@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-query-engine` will be documented in this file.
 
+## [1.1.2](https://github.com/victormgomes/laravel-query-engine/compare/v1.1.1...v1.1.2) (2026-06-30)
+
+
+### Bug Fixes
+
+* **validation:** resolve string/array rule conflicts and introduce Trait for Laravel 11 FormRequest compatibility ([#15](https://github.com/victormgomes/laravel-query-engine/issues/15)) ([2793841](https://github.com/victormgomes/laravel-query-engine/commit/2793841a911608246e866ef16ebc5670ef1375e4))
+
+
+### Miscellaneous Chores
+
+* **deps:** bump googleapis/release-please-action from 4 to 5 ([#14](https://github.com/victormgomes/laravel-query-engine/issues/14)) ([005578c](https://github.com/victormgomes/laravel-query-engine/commit/005578cb8c7035df154f560afff08eaa8af3eb75))
+
 ## [1.1.1](https://github.com/VictorMGomes/laravel-query-engine/compare/v1.1.0...v1.1.1) (2026-06-23)
 
 
