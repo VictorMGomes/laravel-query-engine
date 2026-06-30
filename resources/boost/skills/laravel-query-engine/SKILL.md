@@ -15,18 +15,25 @@ and SQL Server.
 
 ## Recommended Usage (2 steps)
 
-### Step 1 — Annotate your FormRequest
+### 1. FormRequest Implementation
+
+First, map the FormRequest to its target Model using the `MapQueryEngine` attribute and use the `HasQueryEngineRules` trait.
 
 ```php
-// app/Http/Requests/IndexUserRequest.php
 use Illuminate\Foundation\Http\FormRequest;
 use Victormgomes\LaravelQueryEngine\Attributes\MapQueryEngine;
+use Victormgomes\LaravelQueryEngine\Traits\HasQueryEngineRules;
 use App\Models\User;
 
 #[MapQueryEngine(User::class)]
 class IndexUserRequest extends FormRequest
 {
-    public function authorize(): bool { return true; }
+    use HasQueryEngineRules;
+
+    public function authorize(): bool
+    {
+        return true;
+    }
 }
 ```
 

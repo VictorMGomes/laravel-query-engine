@@ -97,11 +97,14 @@ Annotate your FormRequest with `#[MapQueryEngine(Model::class)]`.
 // app/Http/Requests/IndexUserRequest.php
 use Illuminate\Foundation\Http\FormRequest;
 use Victormgomes\LaravelQueryEngine\Attributes\MapQueryEngine;
+use Victormgomes\LaravelQueryEngine\Traits\HasQueryEngineRules;
 use App\Models\User;
 
 #[MapQueryEngine(User::class)]
 class IndexUserRequest extends FormRequest
 {
+    use HasQueryEngineRules;
+
     public function authorize(): bool
     {
         return true;

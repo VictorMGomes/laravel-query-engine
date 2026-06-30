@@ -7,13 +7,20 @@ generated rules, use the `$this->queryParamRules()` mixin method to merge them
 seamlessly.
 
 ```php
+use Victormgomes\LaravelQueryEngine\Traits\HasQueryEngineRules;
+
 #[MapQueryEngine(User::class)]
 class IndexUserRequest extends FormRequest
 {
+    // Rename the trait method so we can call it inside our custom rules()
+    use HasQueryEngineRules {
+        rules as queryEngineRules;
+    }
+
     public function rules(): array
     {
         return array_merge(
-            $this->queryParamRules(),
+            $this->queryEngineRules(),
             [
                 'custom_header' => 'required|string',
             ]

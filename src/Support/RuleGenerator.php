@@ -71,7 +71,12 @@ final class RuleGenerator
 
         foreach ($allowedOps as $operator) {
             $baseRule = $operatorRules[$operator];
-            $rules['filters.'.$field.'.'.$operator] = RuleType::build($dbTypeValue, $baseRule);
+            $finalRule = RuleType::build($dbTypeValue, $baseRule);
+            $rules['filters.'.$field.'.'.$operator] = $finalRule;
+
+            if (str_contains($finalRule, RuleType::ARRAY)) {
+                $rules['filters.'.$field.'.'.$operator.'.*'] = RuleType::build($dbTypeValue, RuleType::SOMETIMES);
+            }
         }
     }
 

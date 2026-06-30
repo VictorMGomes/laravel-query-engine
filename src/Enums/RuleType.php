@@ -44,7 +44,7 @@ final class RuleType
 
         // Conflict Resolution: If we have a specific DB type (int/bool),
         // remove the generic 'string' type usually provided by the operator map.
-        $hasSpecificType = count(array_intersect($rules, [self::INTEGER, self::NUMERIC, self::BOOLEAN, self::DATE])) > 0;
+        $hasSpecificType = count(array_intersect($rules, [self::INTEGER, self::NUMERIC, self::BOOLEAN, self::DATE, self::ARRAY])) > 0;
 
         if ($hasSpecificType) {
             $rules = array_diff($rules, [self::STRING]);
